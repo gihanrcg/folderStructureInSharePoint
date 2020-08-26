@@ -1,7 +1,14 @@
-# Connect-PnPOnline
+# Script By : Gihan Siriwardhana
+# Web : http://gihansiriwardhana.live/
+
+
+Connect-PnPOnline
+
+$PARENT_SITE = Read-Host -Prompt 'Parent Site Name : '
+$PARENT_FOLDER = Read-Host -Prompt 'Parent Folder Name : '
 
 $ScriptStartTime = $(get-date)
-#  New-PnPList -Title "TestFolderStructure" -Template DocumentLibrary -OnQuickLaunch
+New-PnPList -Title "$($PARENT_SITE)" -Template DocumentLibrary -OnQuickLaunch
 
 $GROUP_LIST = Import-Csv -Path "list.csv"
 $paths = @(
@@ -47,21 +54,20 @@ foreach ($group in $GROUP_LIST) {
     Write-Host ""
 
 
-    $file = Add-PnPFolder -Name $group.group -Folder "/TestFolderStructure/Test-cdap"
+    $file = Add-PnPFolder -Name $group.group -Folder "/$($PARENT_SITE)/Test-cdap"
     
 
     foreach ($item in $paths) {
         Write-Host "Creating directory: $(${item})" -ForegroundColor Cyan 
-        Copy-PnPFile -SourceUrl ("TestFolderStructure\sample\" + $item) -TargetUrl ('TestFolderStructure\Test-cdap\' + $group.group) -Force
+        Copy-PnPFile -SourceUrl ("$($PARENT_SITE)\sample\" + $item) -TargetUrl ("$($PARENT_SITE)\$($PARENT_FOLDER)\" + $group.group) -Force
     }
 
     Write-Host "Adding permission to contribution : $($group.group)" -ForegroundColor Magenta  
 
-    Set-PnPFolderPermission -List 'TestFolderStructure' -Identity "TestFolderStructure\Test-cdap\$($group.group)" -User $group.mem1 -AddRole 'Contribute'
-    Set-PnPFolderPermission -List 'TestFolderStructure' -Identity "TestFolderStructure\Test-cdap\$($group.group)" -User $group.mem2 -AddRole 'Contribute'
-    Set-PnPFolderPermission -List 'TestFolderStructure' -Identity "TestFolderStructure\Test-cdap\$($group.group)" -User $group.mem3 -AddRole 'Contribute'
-    Set-PnPFolderPermission -List 'TestFolderStructure' -Identity "TestFolderStructure\Test-cdap\$($group.group)" -User $group.mem4 -AddRole 'Contribute'
-  
+    Set-PnPFolderPermission -List "$($PARENT_SITE)" -Identity "$($PARENT_SITE)\$($PARENT_FOLDER)\$($group.group)" -User $group.mem1 -AddRole 'Contribute'
+    Set-PnPFolderPermission -List "$($PARENT_SITE)" -Identity "$($PARENT_SITE)\$($PARENT_FOLDER)\$($group.group)" -User $group.mem2 -AddRole 'Contribute'
+    Set-PnPFolderPermission -List "$($PARENT_SITE)" -Identity "$($PARENT_SITE)\$($PARENT_FOLDER)\$($group.group)" -User $group.mem3 -AddRole 'Contribute'
+    Set-PnPFolderPermission -List "$($PARENT_SITE)" -Identity "$($PARENT_SITE)\$($PARENT_FOLDER)\$($group.group)" -User $group.mem4 -AddRole 'Contribute'
     
     $elapsedTime = $(get-date) - $StartTime
     $totalTime = "{0:HH:mm:ss}" -f ([datetime]$elapsedTime.Ticks)
