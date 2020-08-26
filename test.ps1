@@ -1,0 +1,1 @@
+Get-ChildItem -Path 'C:\Users\Gihan Siriwardhana\Downloads\2020-021-Students\2020-021-Students' -Recurse -Directory | select FullName | Export-Csv -Path "x.csv" -NoTypeInformation
