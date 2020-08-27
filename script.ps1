@@ -2,13 +2,18 @@
 # Web : http://gihansiriwardhana.live/
 
 
-Connect-PnPOnline
+Connect-PnPOnline -Url https://mysliit.sharepoint.com/sites/gihansite
 
-$PARENT_SITE = Read-Host -Prompt 'Parent Site Name : '
-$PARENT_FOLDER = Read-Host -Prompt 'Parent Folder Name : '
+$PARENT_SITE = Read-Host -Prompt 'Site Title '
+$PARENT_FOLDER = Read-Host -Prompt 'Parent Folder'
 
 $ScriptStartTime = $(get-date)
-New-PnPList -Title "$($PARENT_SITE)" -Template DocumentLibrary -OnQuickLaunch
+$title = New-PnPList -Title "$($PARENT_SITE)" -Template DocumentLibrary -OnQuickLaunch
+
+
+Write-Host "The site is being created....!"
+Start-Sleep -s 30
+Read-Host -Prompt 'Copy the sample folder to the $PARENT_SITE'
 
 $GROUP_LIST = Import-Csv -Path "list.csv"
 $paths = @(
@@ -54,7 +59,7 @@ foreach ($group in $GROUP_LIST) {
     Write-Host ""
 
 
-    $file = Add-PnPFolder -Name $group.group -Folder "/$($PARENT_SITE)/Test-cdap"
+    $file = Add-PnPFolder -Name $group.group -Folder "/$($PARENT_SITE)/$PARENT_FOLDER"
     
 
     foreach ($item in $paths) {
